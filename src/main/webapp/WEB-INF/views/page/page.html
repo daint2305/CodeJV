@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+        <section th:fragment="page-content"> 
+            
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+
+                var searchUrl = /*[[${pageInfo.searchUrl}]]*/ '';
+                console.log("searchUrl : " + searchUrl);
+
+
+                var destPageStr = /*[[${pageInfo.destPage}]]*/ '1';
+                console.log("destPageStr : " + destPageStr);
+                var destPage = Number(destPageStr);
+
+                var totalVal = /*[[${pageInfo.totalPages}]]*/ '1';
+                console.log("totalVal : " + totalVal);
+                var total = Number(totalVal);
+
+
+                $(document).ready(function () {
+                    showPageLink(destPage, 3, total);
+                });
+
+                function showPageLink(curPage, numShowedPage, totalPage) {
+                    var strHtml = "";
+                    if (totalPage <= numShowedPage) {
+                        for (var x = 1; x <= totalPage; x++) {
+                            if (x === curPage) {
+                                if (x === totalPage) {
+                                    strHtml += x;
+                                } else {
+                                    strHtml += x + " | ";
+                                }
+
+                            } else {
+                                if (x === totalPage) {
+                                    strHtml += '<a href="javascript:goToPage(\'' + searchUrl + '\', ' + x + ');">' + x + '</a>';
+                                } else {
+                                    strHtml += '<a href="javascript:goToPage(\'' + searchUrl + '\', ' + x + ');">' + x + '</a>' + ' | ';
+                                }
+                            }
+                        }
+                    } else {
+                        if (curPage != 1) {
+                            strHtml += '<a href="javascript:goToPage(\'' + searchUrl + '\',1);">FIRST</a>' + '&nbsp;&nbsp;&nbsp;';
+                        }
+                        var startPage = 1;
+                        var endPage = totalPage;
+
+                        var numBefore = Math.ceil(numShowedPage / 2);
+                        var numAfter = Math.ceil(numShowedPage / 2) - 1;
+                        if (curPage > numBefore) {
+                            startPage = curPage - numAfter;
+                        }
+
+                        if (curPage > (totalPage - numAfter)) {
+                            startPage = totalPage - numShowedPage + 1;
+                        }
+                        endPage = startPage + (numShowedPage - 1);
+
+                        if (endPage >= totalPage) {
+                            endPage = totalPage;
+                        }
+
+                        for (var x = startPage; x <= endPage; x++) {
+                            if (x == curPage) {
+                                strHtml += x;
+                            } else {
+                                strHtml += '<a href="javascript:goToPage(\'' + searchUrl + '\', ' + x + ');">' + x + '</a>';
+                            }
+                            if (x != endPage) {
+                                strHtml += " | ";
+                            }
+                        }
+                        if (curPage < totalPage) {
+                            strHtml += '&nbsp;&nbsp;&nbsp;<a href="javascript:goToPage(\'' + searchUrl + '\',' + totalPage + ');">LAST</a> ';
+                        }
+                    }
+
+                    document.getElementById("pageshow_id").innerHTML = strHtml;
+                }
+
+                function getTextPage(searchUrl) {
+                    var page = document.getElementById("page").value;
+                    if (isNaN(page)) {
+                        document.getElementById("page").value = destPage;
+                    } else {
+                        if (page > total) {
+                            page = total;
+                        } else if (page < 1) {
+                            page = 1;
+                        }
+
+                        document.getElementById("page").value = page;
+
+                        if (page == destPage) {
+                            return;
+                        } else {
+                            goToPage(searchUrl, page);
+                        }
+                    }
+                }
+
+
+
+                function goToPage(searchUrl, page) {
+                    try {
+                        var hef = searchUrl + "&page=" + page;
+                        window.location.href = hef;
+                    } catch (e) {
+                        console.error(e);
+                    }
+
+                }
+
+
+
+                /*]]>*/
+            </script>
+
+        </section>
+
+
+
+    </body>
+</html>

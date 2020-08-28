@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template/template.html}">
+    <section layout:fragment="custom-content">
+
+        <form id="searchForm" method="GET" th:action="@{/person/list}" > 
+            <table id="searchTable" style="width: 40%">
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <input th:value="${searchName}" type="text" name="searchName" style="width: 180px"  />
+                    </td>
+
+                    <td>Country</td>
+                    <td>
+                        <select style="width: 180px" name="searchCountry" id="searchCountry">
+                            <option value="" >Tất cả</option>
+                            <option value="HN">HN</option>
+                            <option value="HCM">HCM</option>
+                            <option value="ĐN">ĐN</option>
+                        </select> 
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Sex</td>
+                    <td>
+                        <input type="radio" name="searchSex" value="" checked="checked"> Tất cả
+                        <input type="radio" name="searchSex" value="1"> Nam
+                        <input type="radio" name="searchSex" value="0"> Nữ                  
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Start Time
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" id="searchStartTime" name="searchStartTime">
+                        </div>
+                    </td>
+
+                    <td>
+                        End Time
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" id="searchEndTime" name="searchEndTime">
+                        </div>
+                    </td>
+
+                </tr>
+            </table>
+
+
+        </form>
+
+        <br/>   
+
+        <div class="form-group" style="float: left">
+            <div class="input-group" style="float: left;">
+                <a href="#">
+                    <input id="btnSearch" type="button" value="Search" style="width: 80px"/>
+                </a>
+            </div>
+
+
+
+            <div class="input-group" style="float: left;margin-left: 5px">
+                <a th:href="@{/person/create}">
+                    <input id="btnAdd" type="button" value="Add" style="width: 80px" />
+                </a>
+            </div>
+
+        </div>
+
+        <br/>
+
+        <table border="1" style="width: 100%;border: 1px solid" cellspacing="none" class="tb" >
+            <tr>
+                <th style="width: 5%;text-align: center">Image</th>
+                <th style="width: 15%;text-align: center">Name</th>
+                <th style="width: 5%;text-align: center">Age</th>
+                <th style="width: 5%;text-align: center">Sex</th>
+
+                <th style="width: 10%;text-align: center">Country</th>
+                <th style="width: 10%;text-align: center">Thời gian tạo</th>
+                <th style="width: 10%;text-align: center">Action</th>
+            </tr>
+            <tr th:each ="person : ${dataList}">
+
+                <td style="text-align: center">
+                    <img th:src="|${IMAGE_URL}/${person.img}|" style="width: 100%;min-width: 80px; height: 80px" />
+                </td>
+                <td th:utext="${person.name}" style="text-align: center"  />
+                <td th:utext="${person.age}"  style="text-align: center" />
+                <td th:utext="${person.sex ==1 ? 'Nam' : 'Nữ'}"  style="text-align: center" />
+                <td th:utext="${person.country}"  style="text-align: center" />
+                <td th:text="${#dates.format(person.createTime,'yyyy-MM-dd HH:mm:ss')}"
+                    style="text-align: center" />
+
+                <td style="text-align: center">
+                    <a  th:href="@{/person/detail?(id=${person.id})}" >
+                        Edit
+                    </a>
+                    /
+                    <a href="#" th:onclick="|deletePerson(${person.id})|"  >
+                        Delete
+                    </a>
+                    /
+                    <a th:href="@{/person/download?(url=${person.img})}" >
+                       Download
+                    </a>
+                </td>
+            </tr>
+        </table>
+        
+        <div th:insert="page/page.html :: page-content" />
+
+
+
+        <script th:inline="javascript">
+
+            var url = /*[[@{/}]]*/ '';
+            var searchSex = /*[[${searchSex}]]*/ '';
+            var searchCountry = /*[[${searchCountry}]]*/ '';
+
+            var searchStartTime = /*[[${searchStartTime}]]*/ '';
+            var searchEndTime = /*[[${searchEndTime}]]*/ '';
+
+            console.log("url : " + url);
+
+
+            function initial() {
+                try {
+
+
+                    $('#searchStartTime').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        timePicker: true,
+                        timePicker24Hour: true,
+                        locale: {
+                            format: 'YYYY-MM-DD HH:mm'
+                        }
+
+                    });
+
+                    $('#searchEndTime').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        timePicker: true,
+                        timePicker24Hour: true,
+                        locale: {
+                            format: 'YYYY-MM-DD HH:mm'
+                        }
+                    });
+
+
+
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            function setting() {
+                try {
+                    $('#searchCountry').val(searchCountry);
+                    $("input[name='searchSex']").val([searchSex]);
+                    $("#searchStartTime").val(searchStartTime);
+                    $("#searchEndTime").val(searchEndTime);
+                    
+                    
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+
+
+
+
+
+            function deletePerson(id) {
+                var r = confirm("Do you want to Delete ?");
+                if (r == true) {
+                    $.ajax({
+                        url: url + "person/delete",
+                        type: "post",
+                        dataType: "text",
+                        data: {
+                            id: id
+                        },
+                        success: function (result) {
+                            alert(result);
+                            location.reload();
+                        }
+                    });
+
+                } else {
+                    return -1;
+                }
+            }
+
+
+            $(document).ready(function () {
+                initial();
+                $("#btnSearch").click(function () {
+                    $("#searchForm").submit();
+                });
+                setting();
+            });
+
+        </script>
+
+        <style type="text/css">
+
+            #searchTable td {
+                padding: 5px
+            }
+
+            .tb tr { line-height: 40px; }
+
+
+        </style>
+
+
+    </section>
+</html>

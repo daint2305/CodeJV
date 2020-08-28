@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<aside class="main-sidebar" style="background-color: #222d32;min-height: 860px" th:fragment="menu">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info" style="color: #fff !important;">
+                
+                <p sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name"></span>
+                </p>
+                
+                <a href="#" style="color: #fff !important;"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+        </div>
+        
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+
+            <li class="header" style="color: #4b646f; background: #1a2226">MENU</li>
+
+            <li class="treeview" id="menu-service-parent">
+                <a href="#">
+                    <i class="fa fa-database"></i>
+                    <span style="color: #fff !important">Quản lý </span>
+                    <span class="pull-right-container">
+                        <span class="label label-primary pull-right">+</span>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="color: #fff !important;">
+<!--                    <li sec:authorize="hasAuthority('ROLE_PERSON')" id="menu-service"><a th:href="@{/person/list}" style="color: #fff !important;"><i class="fa fa-cog"></i> Quản lý Person</a></li>
+                    <li sec:authorize="hasAuthority('ROLE_AUTOCOMPLETE')" id="menu-package"><a th:href="@{/autocomplete/}" style="color: #fff !important;"><i class="fa fa-cog"></i> Autocomplete</a></li>-->
+
+                    <li id="menu-service"><a th:href="@{/person/list}" style="color: #fff !important;"><i class="fa fa-cog"></i> Quản lý Person</a></li>
+                    <li id="menu-package"><a th:href="@{/autocomplete/}" style="color: #fff !important;"><i class="fa fa-cog"></i> Autocomplete</a></li>
+
+                </ul>
+            </li>
+
+            <li>
+                <a  th:href="@{/logout}" style="color: #fff !important" href="#"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+            </li>
+
+
+
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+

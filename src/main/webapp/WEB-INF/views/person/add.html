@@ -1,0 +1,143 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template/template.html}">
+    <section layout:fragment="custom-content">
+
+
+        <h1>Create Person:</h1>   
+
+
+        <form th:action="@{save}" th:object="${personForm}"  method="POST"  enctype="multipart/form-data" >
+
+            <!-- 
+              <ul>
+                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+             </ul>
+            -->
+
+            <table id="tbInfo">
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="name" th:value="*{name}" style="width: 180px"/> 
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></span>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        Age
+                    </td>
+                    <td>
+                        <input type="number" name="age" id="age" th:value="*{age}" style="width: 180px" /> 
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Sex
+                    </td>
+                    <td>
+                        <input type="radio" name="sex" value="1" checked="checked" > Nam
+                        <input type="radio" name="sex" value="0"> Nữ    
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        Country
+                    </td>
+                    <td>
+                        <select style="width: 180px" name="country" id="country" th:value="*{country}">
+                            <option value="HN">HN</option>
+                            <option value="HCM">HCM</option>
+                            <option value="ĐN">ĐN</option>
+                        </select> 
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        Address
+                    </td>
+                    <td>
+                        <input type="text" name="address" id="address" th:value="*{address}" style="width: 180px" /> 
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Image
+                    </td>
+
+                    <td>
+                        <input type='file' id="uploadedFile" name="uploadedFile"  accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*" />
+                        <img id="imgViewer" src="#" alt="" style="width: 180px;height: 180px;display: none" />
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="submit" value="Save" style="width: 120px;" />
+                    </td>
+                </tr>
+                <tr></tr>
+
+            </table>
+
+
+        </form>
+
+        <br/>
+
+        <script th:inline="javascript">
+
+         
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                             
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgViewer').attr('src', e.target.result);
+                        $("#imgViewer").css("display", "block");
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+              
+            }
+
+            $("#uploadedFile").change(function () {
+                readURL(this);             
+            });
+
+
+        </script>
+
+        <style type="text/css">
+
+
+
+
+            #tbInfo td:not(:first-child) {
+                padding-top:10px;
+                padding-bottom:10px;
+                padding-right:10px;   
+            }
+
+
+        </style>
+
+
+    </section>
+</html>

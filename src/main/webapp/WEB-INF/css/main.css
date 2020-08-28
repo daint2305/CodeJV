@@ -1,0 +1,67 @@
+h1{
+    color:#0000FF;
+}
+
+h2{
+    color:#FF0000;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.header{
+    float: left;
+    min-width: 100%;
+    border: 1px solid;
+    border-color: tomato;
+    text-align: center;
+     min-height: 100px;
+}
+
+.footer{
+    float: left;
+    min-width: 100%; 
+    border: 1px solid;
+    border-color: tomato;
+    text-align: center;
+    min-height: 150px;
+}
+.container{
+    float: left;
+    min-width: 100%; 
+    border: 1px solid;
+    border-color: tomato;
+    text-align: center;
+    vertical-align: bottom; 
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.menu{
+    float: left;
+    min-width: 20%;
+    text-align: center;
+    min-height: 400px;
+    border: 1px solid;
+    border-color: yellow;
+
+}
+
+.menu p {
+    line-height: 1.5;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.content{
+    margin-left: 5px;
+    float: left;
+    min-height: 400px;
+    border: 1px solid;
+    border-color: #00acd6;
+    width: 79%;
+
+}

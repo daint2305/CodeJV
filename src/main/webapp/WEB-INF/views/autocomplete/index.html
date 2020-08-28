@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template/template.html}">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Person List</title>  
+    </head>
+    <body>
+        <section layout:fragment="custom-content"> 
+            <h1>Test Auto Complete</h1>
+
+            <form th:action="@{postData}" method="POST">
+
+
+                <input type="hidden" name="selectedVal" id ="selectedVal" value=""  />
+                <br/>
+
+                Select Data
+                <input id="autoComplete" type="text"   autocomplete='off' />
+                <input type="submit" value="Submit"/>
+
+            </form>
+
+
+
+
+
+            <script th:inline="javascript" >
+                /*<![CDATA[*/
+
+                var url = /*[[@{/}]]*/ '';
+                console.log("url : " + url);
+
+                $(document).ready(function () {
+                    setupComplete();
+                });
+
+                function setupComplete() {
+                    try {
+
+                        $("#autoComplete").autocomplete({
+                            source: function (request, response) {
+                                $.ajax({
+                                    url: url + 'autocomplete/getTags',
+                                    dataType: "json",
+                                    data: {
+                                        tagName: request.term
+                                    },
+                                    success: function (data) {
+                                        //var val = JSON.parse(data);
+                                        response($.map(data, function (item) {
+                                            return {
+                                                label: item.tagName,
+                                                value: item.id,
+                                                icon: item.img
+                                            }
+                                        }));
+                                    },
+                                });
+                            },
+
+                            select: function (event, ui) {
+                                event.preventDefault();
+                                $("#autoComplete").val(ui.item.label);
+                                $("#selectedVal").val(ui.item.value);
+                            },
+                            focus: function (event, ui) {
+                                event.preventDefault();
+                                $("#autoComplete").val(ui.item.label);
+                                $("#selectedVal").val(ui.item.value);
+                            },
+                            change: function (event, ui) {
+                                event.preventDefault();
+                                if (!ui.item) {
+                                    $("#autoComplete").val("");
+                                    $("#selectedVal").val("");
+                                }
+
+                            }
+
+
+                        });
+
+                        $("#autoComplete").data("ui-autocomplete")._renderItem = function (ul, item) {
+                            return $('<li/>', {'data-value': item.label})
+                                    .append($('<a/>', {href: "#"})
+                                            .append($('<img/>', {src: item.icon, alt: item.label, style: "width: 60px;height: 80px"})).append(item.label))
+
+                                    .appendTo(ul);
+                        };
+
+                    } catch (e) {
+                        console.error(e);
+                    }
+
+                }
+                /*]]>*/
+            </script>
+
+            <style type="text/css">
+             
+                .ui-autocomplete {
+                    overflow-y: scroll;
+                    height: 300px;
+                    overflow-x: scroll;
+                }
+
+                .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+                .autocomplete-suggestion { padding: 5px 5px; white-space: nowrap; overflow: hidden; font-size:22px}
+                .autocomplete-selected { background: #F0F0F0; }
+                .autocomplete-suggestions strong { font-weight: bold; color: #3399FF; }
+
+
+            </style>
+
+        </section>
+    </body>
+
+
+
+
+
+</html>

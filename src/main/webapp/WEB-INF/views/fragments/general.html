@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="headerfiles">
+        <meta charset="UTF-8" />
+        <link th:href="@{/css/styles.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:fragment="header">
+            <h1>Thymeleaf Fragments sample</h1>
+        </div>
+
+        <p>Go to the next page to see fragments in action</p>
+        <aside>
+            <div>This is a sidebar</div>
+        </aside>
+
+        <div class="another"> Div One</div>
+        <div class="another"> Div Two</div>
+        <div class="another"> 
+            <h1>I am LongLt</h1>
+        </div>
+
+        <footer th:fragment="footer">        
+            <a th:href="@{/fragments}">Fragments Index</a> | 
+            <a th:href="@{/markup}">Markup inclussion</a> | 
+            <a th:href="@{/params}">Fragment params</a> | 
+            <a th:href="@{/other}">Other</a>
+        </footer>
+
+
+        <div th:fragment="formField (field, value, size)">
+            <div>
+                <label th:for="${field}"> <span
+                        th:text="${field}">Field</span>
+                </label>
+            </div>
+            <div>
+                <input type="text" th:id="${field}"
+                       th:name="${field}" th:value="${value}"
+                       th:size="${size}">
+            </div>
+        </div>
+
+        <table>
+            <thead th:fragment="fields(theadFields)">
+                <tr th:replace="${theadFields}"/>         
+            </thead>
+
+            <tbody th:fragment="tableBody(tableData)">
+                <tr th:each="row: ${tableData}">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.firstName}"></td>
+                    <td th:text="${row.LastName}"></td>
+                    <td th:text="${row.age}"></td>
+                </tr>
+            </tbody>
+
+
+
+            <tfoot>
+        </table>
+
+
+
+
+
+
+    </body>
+</html>

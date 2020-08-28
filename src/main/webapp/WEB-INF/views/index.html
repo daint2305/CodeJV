@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template/template.html}">
+    <head>
+        <title>Layout Dialect Example</title>
+    </head>
+    <body>
+        <section layout:fragment="custom-content">
+
+            <div sec:authorize="isAuthenticated()">
+                This content is only shown to authenticated users.
+            </div>
+            <div sec:authorize="hasRole('ADMIN')">
+                This content is only shown to administrators.
+            </div>
+            <div sec:authorize="hasRole('USER')">
+                This content is only shown to users.
+            </div>
+
+            <p>Longlt6 was here</p>
+        </section>
+
+    </body>
+</html>

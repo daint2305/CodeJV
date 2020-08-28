@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <header th:replace="template/header.html :: header"/>
+
+    <body> 
+
+        <div th:replace="template/menu.html :: menu" />
+
+        <div class="content-wrapper" style="min-height: 331px;">
+            <!-- Content Header (Page header) -->
+            <section class="content-header"/>
+
+            <section class="content" layout:fragment="custom-content"> 
+                
+            </section>
+
+
+        </div>
+
+
+    </body>
+
+    <footer th:replace="template/footer.html :: footer"/>
+
+</html>

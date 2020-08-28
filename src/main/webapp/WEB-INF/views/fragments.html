@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thymeleaf Fragments: home</title>
+        <!--/*/ <th:block th:include="fragments/general.html :: headerfiles">
+                </th:block> /*/-->
+    </head>
+    <body>
+
+        <header th:insert="fragments/general.html :: header"> </header>
+
+        <p>Go to the next page to see fragments in action</p>
+
+        <div th:replace="fragments/general.html :: div.another" ></div>
+
+
+        <div th:replace="fragments/general.html
+             :: formField(field='Name', value='John Doe',size='20')">
+        </div>
+
+
+
+
+
+        <table>
+            <thead th:replace="fragments/general.html :: fields(~{ :: .myFields  })">
+
+                <tr class="myFields" id="trOne">
+                    <th>Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                </tr> 
+
+            </thead>
+
+
+            <div th:replace="fragments/general.html :: tableBody(tableData=${data})" />          
+        </table>
+
+        <div th:replace="fragments/general.html :: footer"></div>
+    </body>
+</html>

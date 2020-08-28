@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script th:src="@{/jQuery/jquery-3.3.1.js}"></script>
+        <script th:src="@{/bootstrap/popper.min.js}"></script>
+        <script th:src="@{/bootstrap/bootstrap.min.js}"></script>
+        <link th:href="@{/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css"></link>
+
+        <script th:src="@{/plugins/js/dafault.js}"></script>
+
+        <script th:src="@{/jQuery-ui/jquery-ui.js}"></script>
+        <link th:href="@{/jQuery-ui/jquery-ui.css}" rel="stylesheet" type="text/css"></link>
+
+        <script th:src="@{/plugins/daterangepicker/moment.min.js}"></script>
+        <script th:src="@{/plugins/daterangepicker/daterangepicker.min.js}"></script>
+        <link rel="stylesheet" type="text/css" th:href="@{/plugins/daterangepicker/daterangepicker.css}" />
+
+    </head>
+    <body>
+
+        <div class="jumbotron text-center">
+            <h1>View Page</h1>
+
+        </div>
+
+        <form th:object="${personForm}" method="POST" id="scriptsForm"
+              enctype="multipart/form-data">
+
+            <div class="container" style="margin-bottom: 20px">
+                <input type="hidden" class="form-control" th:value="*{id}"
+                       style="width: 250px" name="id" id="id" />
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Name :</td>
+                            <td><input type="text" class="form-control"
+                                       th:value="*{name}" oninput="this.setCustomValidity('')"
+                                       required="required"
+                                       oninvalid="this.setCustomValidity('Enter Your Name')"
+                                       style="width: 250px" name="name" id="name" /></td>
+                        </tr>
+                        <tr>
+                            <td>Age :</td>
+                            <td><input type="text" class="form-control"
+                                       required="required" oninput="this.setCustomValidity('')"
+                                       oninvalid="this.setCustomValidity('Enter Your Age')"
+                                       style="width: 250px" th:value="*{age}" name="age" id="age"
+                                       onkeypress="return isNumber(event)" /></td>
+
+                        </tr>
+                        <tr>
+                            <td>Gen :</td>
+                            <td><input type="radio" name="sex" value="1"
+                                       th:checked="*{sex == 1 or sex == null }" /> <span>Nam</span> <input
+                                       type="radio" name="sex" value="0" th:checked="*{sex == 0}" /> <span>Nữ</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Address :</td>
+                            <td><input type="text" class="form-control"
+                                       th:value="*{address}" style="width: 250px" name="address"
+                                       id="address" /></td>
+                        </tr>
+
+
+                        <tr>
+                            <td>Country :</td>
+                            <td><select name="country" id="country" class="form-control"
+                                        style="width: 250px">
+                                    <option value="HN" th:selected="*{country =='HN'}">HN</option>
+                                    <option value="HCM" th:selected="*{country =='HCM'}">HCM</option>
+                                    <option value="DN" th:selected="*{country =='DN'}">DN</option>
+                                </select></td>
+                        </tr>
+
+                        <tr>
+                            <td>Image</td>
+
+                            <td>
+                                <div>
+                                    <input type='file' id="uploadedFile" name="uploadedFile"
+                                           accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*" />
+
+                                    <img id="imgViewer" th:src="|${IMAGE_URL}/*{img}|" alt="" th:attr="style = *{img == null ? 'width: 180px;height: 180px;display:none' : 'width: 180px;height: 180px;display:block'}" 
+                                         style="width: 200px; height: 200px; display: none;" />
+                                </div>
+                            </td>
+                        </tr>
+
+
+
+                    </tbody>
+                </table>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-primary"
+                            style="width: 120px">Save</button>
+                    <button type="button" class="btn btn-outline-primary" id="cancelBtn"
+                            style="width: 120px; margin-left: 5px">Cancel</button>
+                </div>
+
+            </div>
+
+
+
+
+        </form>
+
+        <div id="dialog" title="Message" style="display: none;">
+            <p id="errorContent"></p>
+        </div>
+
+        <script th:inline="javascript">
+            var url = /*[[@{/}]]*/'';
+            console.log("url : " + url);
+
+            $(document).on('submit', '#scriptsForm', function (e) {
+                e.preventDefault();
+                scriptsFormAction();
+            });
+
+            $(document).on('click', '#cancelBtn', function (e) {
+                window.location.href = url + "thymeleafController/list";
+            });
+
+            function scriptsFormAction() {
+                try {
+
+                    /* var add = {};
+                     add["name"] = $("#name").val().trim();
+                     add["age"] = parseInt($("#age").val().trim());
+                     add["sex"] = parseInt($('input[name=sex]:checked',
+                     '#scriptsForm').val())
+                     add["country"] = $("#country").val().trim();
+                     
+                     try {
+                     var id = $("#id").val();
+                     if (id) {
+                     add["id"] = Number($("#id").val().trim());
+                     }
+                     } catch (e) {
+                     
+                     } */
+
+                    var formData = new FormData();
+                    formData.append('name', $("#name").val().trim());
+                    formData.append('age', parseInt($("#age").val().trim()));
+                    formData.append('sex', parseInt($('input[name=sex]:checked',
+                            '#scriptsForm').val()));
+                    formData.append('country', $("#country").val().trim());
+                    try {
+                        var id = $("#id").val();
+                        if (id) {
+                            formData.append('id', Number(id));
+                        }
+                    } catch (e) {
+
+                    }
+
+                    var file = $('#uploadedFile')[0].files[0];
+                    if (file) {
+                        formData.append('uploadedFile', file);
+                    }
+
+                    $.ajax({
+                        url: url + "thymeleafController/save",
+                        type: "post",
+                        dataType: "text",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+
+                            var result = jQuery.parseJSON(data);
+                            if (result.status == 0) {
+                                window.location.href = url
+                                        + "thymeleafController/list";
+                            } else {
+                                $("#errorContent").text(result.error);
+                                $("#dialog").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function () {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgViewer').attr('src', e.target.result);
+                        $("#imgViewer").css({
+                            "display": "block"
+                        });
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+
+            }
+
+            $("#uploadedFile").change(function () {
+
+                readURL(this);
+
+            });
+        </script>
+
+
+    </body>
+</html>

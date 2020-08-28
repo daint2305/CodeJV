@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <script th:src="@{/jQuery/jquery-3.3.1.js}"></script>
+        
+        <script th:src="@{/bootstrap/popper.min.js}"></script>
+        <script th:src="@{/bootstrap/bootstrap.min.js}"></script>
+        <link th:href="@{/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css"></link>
+
+        <script th:src="@{/plugins/js/dafault.js}"></script>
+
+        <script th:src="@{/jQuery-ui/jquery-ui.js}"></script>
+        <link th:href="@{/jQuery-ui/jquery-ui.css}" rel="stylesheet" type="text/css"></link>
+
+        <script th:src="@{/plugins/daterangepicker/moment.min.js}"></script>
+        <script th:src="@{/plugins/daterangepicker/daterangepicker.min.js}"></script>
+        <link rel="stylesheet" type="text/css" th:href="@{/plugins/daterangepicker/daterangepicker.css}" />
+
+    </head>
+    <body>
+
+        <div class="jumbotron text-center">
+            <h1>List Page</h1>
+
+        </div>
+        <div class="container right">
+            <form id="searchForm" method="GET" th:action="@{/thymeleafController/search}" > 
+                <table id="searchTable" style="width: 100%">
+                    <tr>
+                        <td>
+                            Start Time
+                        </td>
+                        <td>
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control pull-right" th:value="${searchStartTime}" id="searchStartTime" name="searchStartTime">
+                            </div>
+                        </td>
+
+                        <td>
+                            End Time
+                        </td>
+                        <td>
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control pull-right" th:value="${searchEndTime}" id="searchEndTime" name="searchEndTime">
+                            </div>
+                        </td>
+
+                        <td>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </td>
+
+                    </tr>
+                </table>
+
+
+            </form>
+        </div>
+
+        <br/>   
+
+        <div class="container">
+            <div class="row">
+                <a th:href="@{/thymeleafController/create}">
+                    <button type="button" class="btn btn-primary">Create</button>
+                </a>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-3" style="padding-top: 15px"
+                     th:each="person : ${dataList}">
+                    <img th:src="|${IMAGE_URL}/${person.img}|" class="rounded" alt="Cinque Terre"
+                         style="width: 100%; height: 200px">
+
+                    <h2 style="padding-top: 20px">
+                        <a th:text="| Name : ${person.name} |"></a>
+                    </h2>
+
+                    <h2>
+                        <a th:text="| Age : ${person.age} |"></a>
+                    </h2>
+
+                    <h2>
+                        <a th:text="| Gen : ${person.sex == 0 ? 'Women' : 'Man' } |"></a>
+                    </h2>
+
+
+                    <div class="btn-group">
+                        <a th:href="@{/thymeleafController/detail?(id=${person.id})}">
+                            <button type="button" style="width: 100px" class="btn btn-info">Edit</button>
+                        </a>
+
+
+                        <button type="button" style="width: 100px; margin-left: 5px"
+                                th:onclick="|deleteObject(${person.id})|" class="btn btn-danger">Delete</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <br/>
+
+            <div class="row" style="text-align: center;margin-bottom: 20px;margin-top: 20px">
+                <div style="width: 655px; margin: auto;" id="pageshow_id" />         
+                <div th:insert="page/page.html :: page-content" />
+            </div>
+
+            <div id="dialog-confirm"  style="display: none;" title="Warning ?">
+                <p>
+                    <span class="ui-icon ui-icon-alert"
+                          style="float: left; margin: 12px 12px 20px 0;"></span>Are you sure?
+                </p>
+            </div>
+
+            <div id="dialog" title="Message" style="display: none;">
+                <p id="errorContent"></p>
+            </div>
+
+        </div>
+
+
+    </body>
+
+    <style type="text/css">
+        h2 {
+            color: #292929;
+            line-height: 1.35;
+            font-size: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+    </style>
+
+    <script th:inline="javascript">
+        var url = /*[[@{/}]]*/'';
+        console.log("url : " + url);
+
+        function deleteObject(id) {
+
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "OK": function () {
+                        $.ajax({
+                            url: url + "thymeleafController/delete",
+                            type: "post",
+                            dataType: "text",
+                            data: {
+                                id: id
+                            },
+                            success: function (result) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+        }
+
+        function initial() {
+            try {
+
+
+                $('#searchStartTime').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    timePicker: true,
+                    timePicker24Hour: true,
+                    locale: {
+                        format: 'YYYY-MM-DD HH:mm'
+                    }
+
+                });
+
+                $('#searchEndTime').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    timePicker: true,
+                    timePicker24Hour: true,
+                    locale: {
+                        format: 'YYYY-MM-DD HH:mm'
+                    }
+                });
+
+
+
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        $(document).ready(function () {
+            initial();
+        });
+
+        function validateDate() {
+            var datestr1 = $("#searchStartTime").val();
+            if (datestr1) {
+                if (!moment(datestr1, 'YYYY-MM-DD HH:mm', true).isValid()) {
+
+                    $("#errorContent").text("SearchStartTime is not valid");
+                    $("#dialog").dialog({
+                        modal: true,
+                        buttons: {
+                            Ok: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    return false;
+                }
+            }
+
+            var datestr2 = $("#searchEndTime").val();
+            if (datestr2) {
+                if (!moment(datestr2, 'YYYY-MM-DD HH:mm', true).isValid()) {
+
+                    $("#errorContent").text("SearchEndTime is not valid");
+                    $("#dialog").dialog({
+                        modal: true,
+                        buttons: {
+                            Ok: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    return false;
+                }
+            }
+            return true;
+
+        }
+
+
+//        $(document).on('submit', '#searchForm', function (e) {
+//
+//            if (!validateDate()) {
+//                e.preventDefault();
+//            }
+//
+//
+//        });
+
+
+    </script>
+
+
+
+</html>

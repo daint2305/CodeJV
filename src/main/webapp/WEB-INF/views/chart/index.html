@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+
+
+    </head>
+    <body>   
+
+        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+
+
+
+    </body>
+
+
+    <script type="text/javascript"  th:inline="javascript">
+        
+       
+        
+        var chartData = /*[[${chartModel}]]*/ '';
+	
+        var chartModel = jQuery.parseJSON( chartData);    
+        var categories = chartModel.categories;
+        var series =  chartModel.series;
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Monthly Average Temperature'
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com'
+            },
+            xAxis: {
+                categories: categories
+            },
+            yAxis: {
+                title: {
+                    text: 'Temperature (°C)'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: series
+        });
+    </script>   
+
+
+
+
+
+
+</html>
